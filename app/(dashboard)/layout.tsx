@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Sidebar from '@/components/shared/Sidebar';
 import TopBar from '@/components/shared/TopBar';
 import AIChatWidget from '@/components/ai/AIChatWidget';
+import HelpPanel from '@/components/onboarding/HelpPanel';
 
 /**
  * Dashboard layout shell.
@@ -50,6 +51,9 @@ export default function DashboardLayout({
 
       {/* Floating AI chat widget — fixed, sits above all content */}
       <AIChatWidget />
+
+      {/* Help panel — fixed slide-in, rendered once for all dashboard routes */}
+      <HelpPanel />
     </div>
   );
 }

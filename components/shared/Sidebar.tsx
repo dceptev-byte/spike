@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -8,13 +7,14 @@ import {
   ChevronLeft,
   ChevronRight,
   FolderKanban,
-  HelpCircle,
   LayoutDashboard,
   Users,
   X,
   Zap,
 } from 'lucide-react';
 import UserAvatar from './UserAvatar';
+import HelpButton from './HelpButton';
+import { useUIStore } from '@/lib/store/uiStore';
 
 // ---------------------------------------------------------------------------
 // Navigation config
@@ -25,10 +25,6 @@ const PRIMARY_NAV = [
   { label: 'Projects', href: '/projects', icon: FolderKanban },
   { label: 'My Tasks', href: '/tasks', icon: CheckSquare },
   { label: 'Team', href: '/team', icon: Users },
-] as const;
-
-const SECONDARY_NAV = [
-  { label: 'Help', href: '/help', icon: HelpCircle },
 ] as const;
 
 /** Placeholder — swap for real auth session data when auth is added. */
@@ -53,8 +49,7 @@ export default function Sidebar({
   mobileSidebarOpen,
   onMobileClose,
 }: SidebarProps) {
-  /** Desktop-only collapse state: icon-only vs full width. */
-  const [collapsed, setCollapsed] = useState(false);
+  const { sidebarCollapsed: collapsed, setSidebarCollapsed: setCollapsed } = useUIStore();
   const pathname = usePathname();
 
   function isActive(href: string) {
@@ -130,20 +125,10 @@ export default function Sidebar({
             ))}
           </ul>
 
-          {/* Divider + secondary items */}
+          {/* Divider + Help button */}
           <div className="mt-3 pt-3 border-t border-white/10">
             <ul className="space-y-0.5">
-              {SECONDARY_NAV.map(({ label, href, icon: Icon }) => (
-                <NavItem
-                  key={href}
-                  label={label}
-                  href={href}
-                  icon={<Icon size={17} className="flex-shrink-0" />}
-                  active={isActive(href)}
-                  collapsed={collapsed}
-                  onClick={onMobileClose}
-                />
-              ))}
+              <HelpButton collapsed={collapsed} />
             </ul>
           </div>
         </nav>
