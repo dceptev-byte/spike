@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Sidebar from '@/components/shared/Sidebar';
 import TopBar from '@/components/shared/TopBar';
+import AIChatWidget from '@/components/ai/AIChatWidget';
 
 /**
  * Dashboard layout shell.
@@ -46,6 +47,9 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+
+      {/* Floating AI chat widget — fixed, sits above all content */}
+      <AIChatWidget />
     </div>
   );
 }
