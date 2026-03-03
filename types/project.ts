@@ -30,4 +30,7 @@ export interface Project {
 
   /** ISO 8601 last-updated timestamp. */
   updatedAt: string;
+
+  /** Optional target completion date as an ISO 8601 date string (YYYY-MM-DD). */
+  dueDate?: string;
 }
