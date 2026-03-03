@@ -12,6 +12,7 @@ import {
   X,
 } from 'lucide-react';
 import { useProjectStore } from '@/lib/store/projectStore';
+import { useToastStore } from '@/lib/store/toastStore';
 import { CURRENT_USER } from '@/lib/mockData';
 import type { AIProjectDraft, ProjectStatus } from '@/types';
 
@@ -221,6 +222,7 @@ const inputCls =
 
 export default function NewProjectModal() {
   const addProject = useProjectStore((s) => s.addProject);
+  const addToast   = useToastStore((s) => s.addToast);
 
   const [open, setOpen]       = useState(false);
   const [tab, setTab]         = useState<ModalTab>('ai');
@@ -296,6 +298,7 @@ export default function NewProjectModal() {
       updatedAt: new Date().toISOString(),
     });
 
+    addToast(`Project "${draft.name.trim()}" created`, 'success');
     setOpen(false);
     resetModal();
   }

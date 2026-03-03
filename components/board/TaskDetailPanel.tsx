@@ -14,6 +14,7 @@ import type { Task, Priority, TaskStatus } from '@/types';
 import { MOCK_USERS } from '@/lib/mockData';
 import { PRIORITY_LEVELS, DEFAULT_COLUMNS, STATUS_COLUMNS } from '@/constants';
 import { useTaskStore } from '@/lib/store/taskStore';
+import { useToastStore } from '@/lib/store/toastStore';
 import UserAvatar from '@/components/shared/UserAvatar';
 
 // ---------------------------------------------------------------------------
@@ -62,6 +63,7 @@ export default function TaskDetailPanel({
   onClose,
 }: TaskDetailPanelProps) {
   const { updateTask, addSubtask, toggleSubtask, addComment } = useTaskStore();
+  const addToast = useToastStore((s) => s.addToast);
 
   // Local state for text fields (avoids re-rendering the store on every keystroke)
   const [title, setTitle] = useState('');
@@ -107,11 +109,18 @@ export default function TaskDetailPanel({
   }
 
   function handleAssignee(e: React.ChangeEvent<HTMLSelectElement>) {
-    if (task) updateTask(task.id, { assigneeId: e.target.value || undefined });
+    if (!task) return;
+    const assigneeId = e.target.value || undefined;
+    updateTask(task.id, { assigneeId });
+    const user = MOCK_USERS.find((u) => u.id === assigneeId);
+    addToast(user ? `Assigned to ${user.name}` : 'Task unassigned', 'success');
   }
 
   function handleStatus(e: React.ChangeEvent<HTMLSelectElement>) {
-    if (task) updateTask(task.id, { status: e.target.value as TaskStatus });
+    if (!task) return;
+    const status = e.target.value as TaskStatus;
+    updateTask(task.id, { status });
+    addToast(`Moved to ${STATUS_COLUMNS[status].label}`, 'info');
   }
 
   function handleDueDate(e: React.ChangeEvent<HTMLInputElement>) {

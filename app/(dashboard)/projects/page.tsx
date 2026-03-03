@@ -1,11 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FolderOpen } from 'lucide-react';
 import { useProjectStore } from '@/lib/store/projectStore';
 import { MOCK_TASKS, MOCK_USERS } from '@/lib/mockData';
 import ProjectCard from '@/components/projects/ProjectCard';
 import NewProjectModal from '@/components/projects/NewProjectModal';
+import ProjectListSkeleton from '@/components/projects/ProjectListSkeleton';
 import type { ProjectStatus } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -51,6 +52,13 @@ function EmptyState({ filtered }: { filtered: boolean }) {
 export default function ProjectsPage() {
   const projects = useProjectStore((s) => s.projects);
   const [activeFilter, setActiveFilter] = useState<FilterKey>('all');
+
+  // Simulate initial data fetch — replace with real API loading state when Supabase is wired
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(t);
+  }, []);
 
   // Derive filtered list
   const filtered = useMemo(
@@ -121,6 +129,9 @@ export default function ProjectsPage() {
       </div>
 
       {/* ── Project grid ── */}
+      {isLoading ? (
+        <ProjectListSkeleton count={6} />
+      ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
         {filtered.length === 0 ? (
           <EmptyState filtered={activeFilter !== 'all'} />
@@ -145,6 +156,7 @@ export default function ProjectsPage() {
           })
         )}
       </div>
+      )}
     </div>
   );
 }

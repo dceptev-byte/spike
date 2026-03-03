@@ -1,4 +1,7 @@
+import type { Metadata } from 'next';
 import { AlertCircle, Calendar, CheckCircle2, FolderKanban } from 'lucide-react';
+
+export const metadata: Metadata = { title: 'Dashboard' };
 import { OnboardingChecklist } from '@/components/onboarding';
 import {
   CURRENT_USER,

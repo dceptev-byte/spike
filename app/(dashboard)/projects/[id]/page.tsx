@@ -1,10 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useProjectStore } from '@/lib/store/projectStore';
 import { useTaskStore } from '@/lib/store/taskStore';
 import { MOCK_USERS } from '@/lib/mockData';
 import KanbanBoard from '@/components/board/KanbanBoard';
+import KanbanBoardSkeleton from '@/components/board/KanbanBoardSkeleton';
 import UserAvatar from '@/components/shared/UserAvatar';
 
 // ---------------------------------------------------------------------------
@@ -35,6 +37,13 @@ export default function ProjectPage() {
 
   const projects = useProjectStore((s) => s.projects);
   const tasks = useTaskStore((s) => s.tasks);
+
+  // Simulate initial data fetch — swap for real API loading state when Supabase is wired
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoading(false), 350);
+    return () => clearTimeout(t);
+  }, [projectId]);
 
   const project =
     projects.find((p) => p.id === projectId) ?? projects[0];
@@ -117,7 +126,7 @@ export default function ProjectPage() {
 
       {/* ── Kanban board ── */}
       <div className="flex-1 min-h-0">
-        <KanbanBoard project={project} />
+        {isLoading ? <KanbanBoardSkeleton /> : <KanbanBoard project={project} />}
       </div>
     </div>
   );

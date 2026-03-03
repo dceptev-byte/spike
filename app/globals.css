@@ -26,6 +26,15 @@ body {
   }
 }
 
+/* ── Global focus-visible ring ──────────────────────────────────────────── */
+/* Provides keyboard-navigation focus indicators across all interactive      */
+/* elements without affecting mouse/touch users.                             */
+:focus-visible {
+  outline: 2px solid #6366f1; /* indigo-500 */
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Modal / dialog animations */
 @keyframes overlay-show {
   from { opacity: 0; }

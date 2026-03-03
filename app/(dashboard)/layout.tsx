@@ -5,6 +5,7 @@ import Sidebar from '@/components/shared/Sidebar';
 import TopBar from '@/components/shared/TopBar';
 import AIChatWidget from '@/components/ai/AIChatWidget';
 import HelpPanel from '@/components/onboarding/HelpPanel';
+import ToastProvider from '@/components/shared/ToastProvider';
 
 /**
  * Dashboard layout shell.
@@ -54,6 +55,9 @@ export default function DashboardLayout({
 
       {/* Help panel — fixed slide-in, rendered once for all dashboard routes */}
       <HelpPanel />
+
+      {/* Toast notification stack — bottom-left, above everything */}
+      <ToastProvider />
     </div>
   );
 }
