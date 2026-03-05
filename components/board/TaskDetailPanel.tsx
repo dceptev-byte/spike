@@ -356,7 +356,7 @@ export default function TaskDetailPanel({
                             'text-sm flex-1 leading-snug',
                             sub.completed
                               ? 'line-through text-gray-400'
-                              : 'text-gray-700',
+                              : 'text-gray-900',
                           )}
                         >
                           {sub.title}
@@ -374,7 +374,7 @@ export default function TaskDetailPanel({
                       onChange={(e) => setNewSubtask(e.target.value)}
                       onKeyDown={handleSubtaskKeyDown}
                       placeholder="Subtask title…"
-                      className="flex-1 text-sm border border-blue-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 text-sm text-gray-900 bg-white border border-blue-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
                     />
                     <button
                       onClick={commitSubtask}
@@ -437,7 +437,7 @@ export default function TaskDetailPanel({
                       }}
                       placeholder="Add a comment… (⌘↵ to send)"
                       rows={2}
-                      className="w-full text-sm border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-300 resize-none"
+                      className="w-full text-sm text-gray-900 bg-white border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 resize-none"
                     />
                     {commentBody.trim() && (
                       <button
