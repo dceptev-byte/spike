@@ -386,11 +386,11 @@ export default function NewProjectModal() {
 
         {/* Panel */}
         <Dialog.Content
-          className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl animate-content-show focus:outline-none"
+          className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-lg max-h-[80vh] flex flex-col bg-white rounded-2xl shadow-2xl animate-content-show focus:outline-none"
           aria-describedby={undefined}
         >
           {/* ── Header ── */}
-          <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
+          <div className="flex-none flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
             <Dialog.Title className="text-base font-semibold text-gray-900">
               New Project
             </Dialog.Title>
@@ -400,7 +400,7 @@ export default function NewProjectModal() {
           </div>
 
           {/* ── Tab bar ── */}
-          <div className="flex gap-1 px-6 pt-4">
+          <div className="flex-none flex gap-1 px-6 pt-4">
             <TabButton
               active={tab === 'ai'}
               icon={<Wand2 size={14} />}
@@ -415,8 +415,8 @@ export default function NewProjectModal() {
             />
           </div>
 
-          {/* ── Body ── */}
-          <div className="px-6 py-5">
+          {/* ── Body (scrollable) ── */}
+          <div className="flex-1 overflow-y-auto px-6 py-5">
             {/* ── AI tab ── */}
             {tab === 'ai' && (
               <div className="space-y-5">
@@ -525,9 +525,9 @@ export default function NewProjectModal() {
             {tab === 'manual' && <PreviewForm draft={draft} setDraftField={setDraftField} />}
           </div>
 
-          {/* ── Footer ── */}
+          {/* ── Footer (pinned) ── */}
           {(tab === 'manual' || aiPhase === 'preview') && (
-            <div className="flex items-center justify-end gap-3 px-6 pb-5">
+            <div className="flex-none flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100">
               <Dialog.Close className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
                 Cancel
               </Dialog.Close>
