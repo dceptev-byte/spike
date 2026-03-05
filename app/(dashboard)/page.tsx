@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { AlertCircle, Calendar, CheckCircle2, FolderKanban } from 'lucide-react';
 
 export const metadata: Metadata = { title: 'Dashboard' };
@@ -73,21 +74,26 @@ function StatCard({
   value,
   icon,
   color,
+  href,
 }: {
   label: string;
   value: number;
   icon: React.ReactNode;
   color: StatColor;
+  href: string;
 }) {
   const c = STAT_COLORS[color];
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
+    <Link
+      href={href}
+      className="bg-white rounded-xl border border-gray-200 p-5 block hover:shadow-md hover:border-gray-300 transition-all duration-150"
+    >
       <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${c.icon}`}>
         {icon}
       </div>
       <p className={`text-2xl font-bold ${c.value}`}>{value}</p>
       <p className={`text-sm mt-0.5 ${c.label}`}>{label}</p>
-    </div>
+    </Link>
   );
 }
 
@@ -173,7 +179,10 @@ function ProjectCard({
   const statusLabel = project.status.replace('_', ' ');
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
+    <Link
+      href={`/projects/${project.id}`}
+      className="bg-white rounded-xl border border-gray-200 p-5 block hover:shadow-md hover:border-gray-300 transition-all duration-150"
+    >
       <div className="flex items-start justify-between gap-2 mb-1">
         <h3 className="font-semibold text-gray-900 text-sm leading-snug">{project.name}</h3>
         <span
@@ -204,7 +213,7 @@ function ProjectCard({
           Due {formatShortDate(project.dueDate)}
         </p>
       )}
-    </div>
+    </Link>
   );
 }
 
@@ -261,24 +270,28 @@ export default function DashboardPage() {
           value={activeProjects}
           icon={<FolderKanban size={18} />}
           color="blue"
+          href="/projects?filter=active"
         />
         <StatCard
           label="Due Today"
           value={tasksDueToday}
           icon={<Calendar size={18} />}
           color="amber"
+          href="/tasks?filter=due-today"
         />
         <StatCard
           label="Overdue Tasks"
           value={overdueTasks}
           icon={<AlertCircle size={18} />}
           color="red"
+          href="/tasks?filter=overdue"
         />
         <StatCard
           label="Done This Week"
           value={completedThisWeek}
           icon={<CheckCircle2 size={18} />}
           color="green"
+          href="/tasks?filter=done"
         />
       </div>
 

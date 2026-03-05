@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Calendar, CheckSquare } from 'lucide-react';
 import UserAvatar from '@/components/shared/UserAvatar';
 import type { Project, User } from '@/types';
@@ -38,6 +39,8 @@ export interface ProjectCardProps {
   taskCount: number;
   /** Number of tasks with status === 'done'. */
   doneCount: number;
+  /** When provided the entire card becomes a Next.js Link to this URL. */
+  href?: string;
   onClick?: () => void;
 }
 
@@ -51,6 +54,7 @@ export default function ProjectCard({
   members,
   taskCount,
   doneCount,
+  href,
   onClick,
 }: ProjectCardProps) {
   const progress     = taskCount > 0 ? Math.round((doneCount / taskCount) * 100) : 0;
@@ -62,13 +66,15 @@ export default function ProjectCard({
   const visibleMembers = members.slice(0, 4);
   const extraCount     = Math.max(0, members.length - visibleMembers.length);
 
-  return (
+  const isInteractive = !!(href || onClick);
+
+  const article = (
     <article
-      onClick={onClick}
+      onClick={href ? undefined : onClick}
       className={[
         'bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col',
         'transition-all duration-150 hover:shadow-md hover:border-gray-300',
-        onClick ? 'cursor-pointer' : '',
+        isInteractive ? 'cursor-pointer' : '',
       ].join(' ')}
     >
       {/* ── Colour accent bar ── */}
@@ -152,4 +158,14 @@ export default function ProjectCard({
       </div>
     </article>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="block rounded-xl focus-visible:outline-indigo-500">
+        {article}
+      </Link>
+    );
+  }
+
+  return article;
 }

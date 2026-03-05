@@ -150,7 +150,7 @@ export default function ProjectsPage() {
                 members={members}
                 taskCount={projectTasks.length}
                 doneCount={doneCount}
-                // onClick would navigate to /projects/[id] once that page exists
+                href={`/projects/${project.id}`}
               />
             );
           })
