@@ -217,6 +217,69 @@ const inputCls =
   'w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition';
 
 // ---------------------------------------------------------------------------
+// Shared preview / manual form — defined at module level to prevent remounting
+// ---------------------------------------------------------------------------
+
+interface PreviewFormProps {
+  draft: DraftState;
+  setDraftField: <K extends keyof DraftState>(key: K, value: DraftState[K]) => void;
+}
+
+function PreviewForm({ draft, setDraftField }: PreviewFormProps) {
+  return (
+    <div className="space-y-4">
+      {/* Name */}
+      <div>
+        <Label>Project name *</Label>
+        <input
+          className={inputCls}
+          value={draft.name}
+          onChange={(e) => setDraftField('name', e.target.value)}
+          placeholder="e.g. Mobile App MVP"
+        />
+      </div>
+
+      {/* Description */}
+      <div>
+        <Label>Description</Label>
+        <textarea
+          className={`${inputCls} resize-none`}
+          rows={3}
+          value={draft.description}
+          onChange={(e) => setDraftField('description', e.target.value)}
+          placeholder="What is this project about?"
+        />
+      </div>
+
+      {/* Status + Due date row */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>Status</Label>
+          <select
+            className={inputCls}
+            value={draft.status}
+            onChange={(e) => setDraftField('status', e.target.value as ProjectStatus)}
+          >
+            <option value="planning">Planning</option>
+            <option value="active">Active</option>
+            <option value="on_hold">On Hold</option>
+          </select>
+        </div>
+        <div>
+          <Label>Due date</Label>
+          <input
+            type="date"
+            className={inputCls}
+            value={draft.dueDate}
+            onChange={(e) => setDraftField('dueDate', e.target.value)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 
@@ -303,64 +366,7 @@ export default function NewProjectModal() {
     resetModal();
   }
 
-  // ── Shared preview / manual form ─────────────────────────────────────────
-
   const canSubmit = draft.name.trim().length > 0;
-
-  function PreviewForm() {
-    return (
-      <div className="space-y-4">
-        {/* Name */}
-        <div>
-          <Label>Project name *</Label>
-          <input
-            className={inputCls}
-            value={draft.name}
-            onChange={(e) => setDraftField('name', e.target.value)}
-            placeholder="e.g. Mobile App MVP"
-            autoFocus
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <Label>Description</Label>
-          <textarea
-            className={`${inputCls} resize-none`}
-            rows={3}
-            value={draft.description}
-            onChange={(e) => setDraftField('description', e.target.value)}
-            placeholder="What is this project about?"
-          />
-        </div>
-
-        {/* Status + Due date row */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <Label>Status</Label>
-            <select
-              className={inputCls}
-              value={draft.status}
-              onChange={(e) => setDraftField('status', e.target.value as ProjectStatus)}
-            >
-              <option value="planning">Planning</option>
-              <option value="active">Active</option>
-              <option value="on_hold">On Hold</option>
-            </select>
-          </div>
-          <div>
-            <Label>Due date</Label>
-            <input
-              type="date"
-              className={inputCls}
-              value={draft.dueDate}
-              onChange={(e) => setDraftField('dueDate', e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // ── Render ────────────────────────────────────────────────────────────────
 
@@ -470,7 +476,7 @@ export default function NewProjectModal() {
                       </span>
                     </div>
 
-                    <PreviewForm />
+                    <PreviewForm draft={draft} setDraftField={setDraftField} />
 
                     {/* Suggested tasks */}
                     {draft.tasks.length > 0 && (
@@ -516,7 +522,7 @@ export default function NewProjectModal() {
             )}
 
             {/* ── Manual tab ── */}
-            {tab === 'manual' && <PreviewForm />}
+            {tab === 'manual' && <PreviewForm draft={draft} setDraftField={setDraftField} />}
           </div>
 
           {/* ── Footer ── */}
