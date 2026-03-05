@@ -21,7 +21,7 @@ import { useUIStore } from '@/lib/store/uiStore';
 // ---------------------------------------------------------------------------
 
 const PRIMARY_NAV = [
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Dashboard', href: '/', icon: LayoutDashboard },
   { label: 'Projects', href: '/projects', icon: FolderKanban },
   { label: 'My Tasks', href: '/tasks', icon: CheckSquare },
   { label: 'Team', href: '/team', icon: Users },
