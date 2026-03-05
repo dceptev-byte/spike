@@ -5,12 +5,12 @@ import {
   ChevronDown,
   LogOut,
   Menu,
-  Search,
   Settings,
   User,
 } from 'lucide-react';
 import NotificationBell from './NotificationBell';
 import UserAvatar from './UserAvatar';
+import SearchBar from './SearchBar';
 
 /** Placeholder — swap for real auth session data when auth is added. */
 const MOCK_USER = { name: 'Alex Morgan', email: 'alex@spike.app' };
@@ -22,7 +22,6 @@ interface TopBarProps {
 
 export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [search, setSearch] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   /** Close the dropdown whenever the user clicks outside it. */
@@ -51,21 +50,7 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
       </button>
 
       {/* Search bar */}
-      <div className="flex-1 max-w-md">
-        <div className="relative">
-          <Search
-            size={15}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-          />
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search tasks, projects…"
-            className="w-full h-9 pl-9 pr-4 rounded-lg bg-gray-100 border border-transparent text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:bg-white focus:border-indigo-300 transition-colors"
-          />
-        </div>
-      </div>
+      <SearchBar />
 
       {/* Right-side actions */}
       <div className="flex items-center gap-1 ml-auto">
