@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import {
   Bell,
   CheckCheck,
@@ -160,9 +161,13 @@ export default function NotificationBell() {
                 const { icon, bg } = TYPE_CONFIG[n.type];
                 return (
                   <li key={n.id}>
-                    <button
-                      onClick={() => markRead(n.id)}
-                      className="w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+                    <Link
+                      href={n.link}
+                      onClick={() => {
+                        markRead(n.id);
+                        setIsOpen(false);
+                      }}
+                      className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
                     >
                       {/* Unread dot — always reserve the space so text stays aligned */}
                       <div className="flex-shrink-0 mt-2">
@@ -195,7 +200,7 @@ export default function NotificationBell() {
                           {timeAgo(n.timestamp)}
                         </p>
                       </div>
-                    </button>
+                    </Link>
                   </li>
                 );
               })}
@@ -204,9 +209,13 @@ export default function NotificationBell() {
 
           {/* Footer */}
           <div className="border-t border-gray-100 px-4 py-2.5">
-            <button className="w-full text-xs text-center font-medium text-indigo-600 hover:text-indigo-700 transition-colors py-0.5">
+            <Link
+              href="/tasks"
+              onClick={() => setIsOpen(false)}
+              className="block w-full text-xs text-center font-medium text-indigo-600 hover:text-indigo-700 transition-colors py-0.5"
+            >
               View all notifications
-            </button>
+            </Link>
           </div>
         </div>
       )}

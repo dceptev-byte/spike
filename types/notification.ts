@@ -8,4 +8,6 @@ export interface Notification {
   /** ISO 8601 timestamp — used to compute relative "X ago" label. */
   timestamp: string;
   read: boolean;
+  /** Internal route to navigate to when the notification is clicked. */
+  link: string;
 }

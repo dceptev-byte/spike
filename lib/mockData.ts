@@ -409,6 +409,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     text: 'Jordan assigned you "Fix mobile navigation menu" in Website Redesign',
     timestamp: '2026-03-07T06:15:00Z',
     read: false,
+    link: '/projects/proj-1',
   },
   {
     id: 'notif-2',
@@ -416,6 +417,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     text: 'Sam commented on "Design new homepage hero section"',
     timestamp: '2026-03-07T04:00:00Z',
     read: false,
+    link: '/projects/proj-1',
   },
   {
     id: 'notif-3',
@@ -423,6 +425,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     text: '"Implement user authentication" is due today',
     timestamp: '2026-03-07T00:01:00Z',
     read: false,
+    link: '/tasks',
   },
   {
     id: 'notif-4',
@@ -430,6 +433,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     text: 'Riley assigned you "Create onboarding flow screens" in Mobile App MVP',
     timestamp: '2026-03-06T16:45:00Z',
     read: true,
+    link: '/projects/proj-2',
   },
   {
     id: 'notif-5',
@@ -437,6 +441,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     text: 'Jordan left a comment on "Webhook error handling"',
     timestamp: '2026-03-05T10:20:00Z',
     read: true,
+    link: '/projects/proj-4',
   },
 ];
 
