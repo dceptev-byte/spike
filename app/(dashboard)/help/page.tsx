@@ -108,25 +108,49 @@ const FAQ: FaqItem[] = [
   },
 ];
 
-interface ShortcutRow {
+interface Shortcut {
   action: string;
-  mac: string;
-  windows: string;
+  keys: string[];
+  separator?: 'then' | 'or';
 }
 
-const SHORTCUTS: ShortcutRow[] = [
-  { action: 'Open command palette', mac: '⌘ K', windows: 'Ctrl K' },
-  { action: 'New task', mac: '⌘ T', windows: 'Ctrl T' },
-  { action: 'New project', mac: '⌘ Shift P', windows: 'Ctrl Shift P' },
-  { action: 'Search', mac: '⌘ /', windows: 'Ctrl /' },
-  { action: 'Open AI chat', mac: '⌘ Shift A', windows: 'Ctrl Shift A' },
-  { action: 'Navigate to Dashboard', mac: '⌘ 1', windows: 'Ctrl 1' },
-  { action: 'Navigate to Projects', mac: '⌘ 2', windows: 'Ctrl 2' },
-  { action: 'Navigate to My Tasks', mac: '⌘ 3', windows: 'Ctrl 3' },
-  { action: 'Close panel / modal', mac: 'Esc', windows: 'Esc' },
-  { action: 'Submit comment', mac: '⌘ ↵', windows: 'Ctrl ↵' },
-  { action: 'Edit task title', mac: 'E', windows: 'E' },
-  { action: 'Toggle sidebar', mac: '⌘ \\', windows: 'Ctrl \\' },
+interface ShortcutGroup {
+  category: string;
+  shortcuts: Shortcut[];
+}
+
+const SHORTCUT_GROUPS: ShortcutGroup[] = [
+  {
+    category: 'Navigation',
+    shortcuts: [
+      { action: 'Go to Dashboard', keys: ['G', 'D'] },
+      { action: 'Go to Projects', keys: ['G', 'P'] },
+      { action: 'Go to My Tasks', keys: ['G', 'T'] },
+      { action: 'Go to Help', keys: ['G', 'H'] },
+    ],
+  },
+  {
+    category: 'Tasks',
+    shortcuts: [
+      { action: 'New Task', keys: ['C'] },
+      { action: 'Search', keys: ['/', '⌘K'], separator: 'or' },
+      { action: 'Close panel', keys: ['Esc'] },
+    ],
+  },
+  {
+    category: 'Projects',
+    shortcuts: [
+      { action: 'New Project', keys: ['⌘N'] },
+      { action: 'Filter tasks', keys: ['F'] },
+    ],
+  },
+  {
+    category: 'General',
+    shortcuts: [
+      { action: 'Open Help', keys: ['Shift+?'] },
+      { action: 'Mark complete', keys: ['↵'] },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -166,11 +190,18 @@ export default function HelpPage() {
     [q],
   );
 
-  const filteredShortcuts = useMemo(
+  const filteredShortcutGroups = useMemo(
     () =>
       q
-        ? SHORTCUTS.filter((s) => s.action.toLowerCase().includes(q))
-        : SHORTCUTS,
+        ? SHORTCUT_GROUPS.map((group) => ({
+            ...group,
+            shortcuts: group.shortcuts.filter(
+              (s) =>
+                s.action.toLowerCase().includes(q) ||
+                group.category.toLowerCase().includes(q),
+            ),
+          })).filter((group) => group.shortcuts.length > 0)
+        : SHORTCUT_GROUPS,
     [q],
   );
 
@@ -310,7 +341,7 @@ export default function HelpPage() {
       )}
 
       {/* ── Keyboard Shortcuts ── */}
-      {filteredShortcuts.length > 0 && (
+      {filteredShortcutGroups.length > 0 && (
         <section id="shortcuts">
           <SectionHeader icon={Keyboard} title="Keyboard Shortcuts" />
           <div className="mt-4 rounded-xl border border-gray-200 overflow-hidden">
@@ -320,30 +351,39 @@ export default function HelpPage() {
                   <th className="text-left px-5 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wide">
                     Action
                   </th>
-                  <th className="text-center px-5 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wide">
-                    Mac
-                  </th>
-                  <th className="text-center px-5 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wide">
-                    Windows / Linux
+                  <th className="text-left px-5 py-3 font-semibold text-gray-600 text-xs uppercase tracking-wide">
+                    Shortcut
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
-                {filteredShortcuts.map((row) => (
-                  <tr key={row.action} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-5 py-3 text-gray-700">{row.action}</td>
-                    <td className="px-5 py-3 text-center">
-                      <kbd className="inline-flex items-center px-2 py-0.5 rounded border border-gray-300 bg-gray-50 text-xs font-mono text-gray-700">
-                        {row.mac}
-                      </kbd>
+                {filteredShortcutGroups.flatMap((group) => [
+                  <tr key={`cat-${group.category}`} className="bg-gray-50/70">
+                    <td colSpan={2} className="px-5 py-2 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                      {group.category}
                     </td>
-                    <td className="px-5 py-3 text-center">
-                      <kbd className="inline-flex items-center px-2 py-0.5 rounded border border-gray-300 bg-gray-50 text-xs font-mono text-gray-700">
-                        {row.windows}
-                      </kbd>
-                    </td>
-                  </tr>
-                ))}
+                  </tr>,
+                  ...group.shortcuts.map((shortcut) => (
+                    <tr key={shortcut.action} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-5 py-3 text-gray-700">{shortcut.action}</td>
+                      <td className="px-5 py-3">
+                        <div className="flex items-center gap-1 flex-wrap">
+                          {shortcut.keys.flatMap((key, i) => [
+                            ...(i > 0
+                              ? [<span key={`sep-${i}`} className="text-xs text-gray-400 mx-0.5">{shortcut.separator ?? 'then'}</span>]
+                              : []),
+                            <kbd
+                              key={`key-${i}`}
+                              className="inline-flex items-center px-1.5 py-0.5 rounded border border-gray-300 border-b-2 bg-gray-100 text-xs font-mono text-gray-700"
+                            >
+                              {key}
+                            </kbd>,
+                          ])}
+                        </div>
+                      </td>
+                    </tr>
+                  )),
+                ])}
               </tbody>
             </table>
           </div>
@@ -351,7 +391,7 @@ export default function HelpPage() {
       )}
 
       {/* No results */}
-      {q && filteredArticles.length === 0 && filteredFaq.length === 0 && filteredShortcuts.length === 0 && (
+      {q && filteredArticles.length === 0 && filteredFaq.length === 0 && filteredShortcutGroups.length === 0 && (
         <div className="text-center py-16 text-gray-500">
           <Search size={32} className="mx-auto mb-3 text-gray-300" />
           <p className="font-medium">No results for &ldquo;{query}&rdquo;</p>

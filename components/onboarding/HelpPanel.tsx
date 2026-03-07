@@ -52,6 +52,40 @@ const QUICK_LINKS = [
   },
 ] as const;
 
+const PANEL_SHORTCUT_GROUPS = [
+  {
+    category: 'Navigation',
+    shortcuts: [
+      { action: 'Go to Dashboard', keys: ['G', 'D'], separator: 'then' as const },
+      { action: 'Go to Projects', keys: ['G', 'P'], separator: 'then' as const },
+      { action: 'Go to My Tasks', keys: ['G', 'T'], separator: 'then' as const },
+      { action: 'Go to Help', keys: ['G', 'H'], separator: 'then' as const },
+    ],
+  },
+  {
+    category: 'Tasks',
+    shortcuts: [
+      { action: 'New Task', keys: ['C'] },
+      { action: 'Search', keys: ['/', '⌘K'], separator: 'or' as const },
+      { action: 'Close panel', keys: ['Esc'] },
+    ],
+  },
+  {
+    category: 'Projects',
+    shortcuts: [
+      { action: 'New Project', keys: ['⌘N'] },
+      { action: 'Filter tasks', keys: ['F'] },
+    ],
+  },
+  {
+    category: 'General',
+    shortcuts: [
+      { action: 'Open Help', keys: ['Shift+?'] },
+      { action: 'Mark complete', keys: ['↵'] },
+    ],
+  },
+];
+
 const PANEL_VIDEOS = [
   {
     title: 'Spike in 2 minutes',
@@ -299,6 +333,58 @@ export default function HelpPanel() {
                   </div>
                 </button>
               ))}
+            </div>
+          </section>
+
+          {/* Divider */}
+          <div className="h-px bg-gray-100 mx-5" />
+
+          {/* Keyboard Shortcuts */}
+          <section className="px-5 py-5">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+                Keyboard Shortcuts
+              </h3>
+              <Link
+                href="/help#shortcuts"
+                onClick={closeHelpPanel}
+                className="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-0.5"
+              >
+                View all <ExternalLink size={10} />
+              </Link>
+            </div>
+            <div className="rounded-xl border border-gray-100 overflow-hidden">
+              <table className="w-full">
+                <tbody className="divide-y divide-gray-100">
+                  {PANEL_SHORTCUT_GROUPS.flatMap((group) => [
+                    <tr key={`cat-${group.category}`} className="bg-gray-50">
+                      <td colSpan={2} className="px-3 py-1.5 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
+                        {group.category}
+                      </td>
+                    </tr>,
+                    ...group.shortcuts.map((shortcut) => (
+                      <tr key={shortcut.action} className="bg-white hover:bg-gray-50 transition-colors">
+                        <td className="px-3 py-2 text-[11px] text-gray-700">{shortcut.action}</td>
+                        <td className="px-3 py-2">
+                          <div className="flex items-center gap-1 flex-wrap justify-end">
+                            {shortcut.keys.flatMap((key, i) => [
+                              ...(i > 0
+                                ? [<span key={`sep-${i}`} className="text-[10px] text-gray-400">{shortcut.separator ?? 'then'}</span>]
+                                : []),
+                              <kbd
+                                key={`key-${i}`}
+                                className="inline-flex items-center px-1 py-0.5 rounded border border-gray-300 border-b-2 bg-gray-100 text-[10px] font-mono text-gray-700"
+                              >
+                                {key}
+                              </kbd>,
+                            ])}
+                          </div>
+                        </td>
+                      </tr>
+                    )),
+                  ])}
+                </tbody>
+              </table>
             </div>
           </section>
 
