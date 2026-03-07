@@ -9,6 +9,7 @@ import {
   ChevronUp,
   Keyboard,
   MessageSquare,
+  X,
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -136,6 +137,7 @@ export default function HelpPage() {
   const [query, setQuery] = useState('');
   const [openArticle, setOpenArticle] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<typeof VIDEOS[number] | null>(null);
 
   const q = query.trim().toLowerCase();
 
@@ -244,7 +246,8 @@ export default function HelpPage() {
             {VIDEOS.map((video) => (
               <div
                 key={video.title}
-                className="rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group"
+                onClick={() => setSelectedVideo(video)}
+                className="rounded-xl overflow-hidden border border-gray-100 hover:shadow-md hover:scale-105 transition-all cursor-pointer group"
               >
                 {/* Placeholder thumbnail */}
                 <div
@@ -253,6 +256,9 @@ export default function HelpPage() {
                     video.gradient,
                   )}
                 >
+                  <span className="absolute top-2 left-2.5 text-[10px] font-bold uppercase tracking-wide text-white bg-black/40 px-1.5 py-0.5 rounded">
+                    Coming Soon
+                  </span>
                   <div className="w-11 h-11 rounded-full bg-white/25 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <PlayCircle size={22} className="text-white" />
                   </div>
@@ -355,6 +361,43 @@ export default function HelpPage() {
 
       {/* Bottom padding */}
       <div className="h-4" />
+
+      {/* Video Modal */}
+      {selectedVideo && (
+        <div
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
+          onClick={() => setSelectedVideo(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <h3 className="text-base font-semibold text-gray-900">{selectedVideo.title}</h3>
+              <button
+                onClick={() => setSelectedVideo(null)}
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                aria-label="Close video"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="p-5">
+              <div
+                className={clsx(
+                  'rounded-xl h-56 bg-gradient-to-br flex flex-col items-center justify-center gap-3',
+                  selectedVideo.gradient,
+                )}
+              >
+                <div className="w-14 h-14 rounded-full bg-white/25 flex items-center justify-center">
+                  <PlayCircle size={30} className="text-white" />
+                </div>
+                <p className="text-sm font-medium text-white/90">Video coming soon</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

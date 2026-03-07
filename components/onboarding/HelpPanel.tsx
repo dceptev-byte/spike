@@ -52,6 +52,24 @@ const QUICK_LINKS = [
   },
 ] as const;
 
+const PANEL_VIDEOS = [
+  {
+    title: 'Spike in 2 minutes',
+    duration: '2:14',
+    gradient: 'from-indigo-500 to-violet-600',
+  },
+  {
+    title: 'AI project generation walkthrough',
+    duration: '4:32',
+    gradient: 'from-rose-500 to-pink-600',
+  },
+  {
+    title: 'Kanban board deep dive',
+    duration: '6:08',
+    gradient: 'from-emerald-500 to-teal-600',
+  },
+] as const;
+
 const GETTING_STARTED_ARTICLES = [
   {
     title: 'How to create your first project',
@@ -88,6 +106,7 @@ export default function HelpPanel() {
   const { helpPanelOpen, closeHelpPanel, setActivePanel } =
     useUIStore();
   const [openArticle, setOpenArticle] = useState<number | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<typeof PANEL_VIDEOS[number] | null>(null);
 
   function handleOpenAI() {
     closeHelpPanel();
@@ -251,6 +270,41 @@ export default function HelpPanel() {
           {/* Divider */}
           <div className="h-px bg-gray-100 mx-5" />
 
+          {/* Video Tutorials */}
+          <section className="px-5 py-5">
+            <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              Video Tutorials
+            </h3>
+            <div className="space-y-2">
+              {PANEL_VIDEOS.map((video) => (
+                <button
+                  key={video.title}
+                  onClick={() => setSelectedVideo(video)}
+                  className="w-full flex items-center gap-3 rounded-xl overflow-hidden border border-gray-100 hover:shadow-sm hover:scale-[1.02] transition-all cursor-pointer group text-left"
+                >
+                  <div
+                    className={clsx(
+                      'w-16 h-12 bg-gradient-to-br flex items-center justify-center relative flex-shrink-0',
+                      video.gradient,
+                    )}
+                  >
+                    <span className="absolute top-1 left-1 text-[8px] font-bold uppercase tracking-wide text-white bg-black/40 px-1 py-0.5 rounded leading-none">
+                      Soon
+                    </span>
+                    <PlayCircle size={16} className="text-white group-hover:scale-110 transition-transform" />
+                  </div>
+                  <div className="flex-1 min-w-0 pr-3 py-2">
+                    <p className="text-xs font-medium text-gray-800 truncate leading-snug">{video.title}</p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">{video.duration}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {/* Divider */}
+          <div className="h-px bg-gray-100 mx-5" />
+
           {/* What's new */}
           <section className="px-5 py-5">
             <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">
@@ -298,6 +352,43 @@ export default function HelpPanel() {
           </Link>
         </div>
       </div>
+
+      {/* Video Modal */}
+      {selectedVideo && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center"
+          onClick={() => setSelectedVideo(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <h3 className="text-sm font-semibold text-gray-900">{selectedVideo.title}</h3>
+              <button
+                onClick={() => setSelectedVideo(null)}
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                aria-label="Close video"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="p-4">
+              <div
+                className={clsx(
+                  'rounded-xl h-44 bg-gradient-to-br flex flex-col items-center justify-center gap-3',
+                  selectedVideo.gradient,
+                )}
+              >
+                <div className="w-12 h-12 rounded-full bg-white/25 flex items-center justify-center">
+                  <PlayCircle size={26} className="text-white" />
+                </div>
+                <p className="text-sm font-medium text-white/90">Video coming soon</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
