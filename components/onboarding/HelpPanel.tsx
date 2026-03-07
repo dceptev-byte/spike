@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import {
   X,
@@ -8,10 +9,10 @@ import {
   Sparkles,
   ExternalLink,
   ChevronRight,
+  ChevronDown,
   PlayCircle,
   MessageCircle,
   Zap,
-  Star,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useUIStore } from '@/lib/store/uiStore';
@@ -51,30 +52,31 @@ const QUICK_LINKS = [
   },
 ] as const;
 
-const FEATURED_ARTICLES = [
+const GETTING_STARTED_ARTICLES = [
   {
-    title: 'Understanding the Kanban board',
-    category: 'Getting Started',
-    readTime: '5 min',
-    href: '/help',
+    title: 'How to create your first project',
+    content:
+      'Navigate to the Projects page and click New Project. Choose a blank project or use a template to get started quickly. Add tasks, set priorities, and invite teammates to collaborate.',
   },
   {
-    title: 'Using AI to generate projects',
-    category: 'AI Features',
-    readTime: '4 min',
-    href: '/help',
+    title: 'Using the AI project generator',
+    content:
+      'Click New Project and switch to the AI Generate tab. Describe your goal in plain English and Spike AI will scaffold a full project plan with tasks and priorities in seconds.',
   },
   {
-    title: 'Setting up task priorities',
-    category: 'Tasks',
-    readTime: '3 min',
-    href: '/help',
+    title: 'Managing tasks on the Kanban board',
+    content:
+      'Drag task cards between columns to update their status instantly. Click any card to open the detail panel and add subtasks, set due dates, or leave comments.',
   },
   {
-    title: 'Inviting team members',
-    category: 'Collaboration',
-    readTime: '2 min',
-    href: '/help',
+    title: 'Inviting and managing team members',
+    content:
+      "Go to Settings and open the Team tab, enter a teammate's email, and select their role. They'll receive an invite link and can join your workspace immediately.",
+  },
+  {
+    title: 'Using the AI chat assistant',
+    content:
+      'Click the chat bubble in the bottom-right corner to open the AI assistant. Ask questions, request task generation, or get help with any Spike feature.',
   },
 ] as const;
 
@@ -85,6 +87,7 @@ const FEATURED_ARTICLES = [
 export default function HelpPanel() {
   const { helpPanelOpen, closeHelpPanel, setActivePanel } =
     useUIStore();
+  const [openArticle, setOpenArticle] = useState<number | null>(null);
 
   function handleOpenAI() {
     closeHelpPanel();
@@ -195,11 +198,11 @@ export default function HelpPanel() {
           {/* Divider */}
           <div className="h-px bg-gray-100 mx-5" />
 
-          {/* Featured articles */}
+          {/* Getting Started accordion */}
           <section className="px-5 py-5">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
-                Featured Articles
+                Getting Started
               </h3>
               <Link
                 href="/help"
@@ -209,31 +212,40 @@ export default function HelpPanel() {
                 View all <ExternalLink size={10} />
               </Link>
             </div>
-            <ul className="space-y-1">
-              {FEATURED_ARTICLES.map((article) => (
-                <li key={article.title}>
-                  <Link
-                    href={article.href}
-                    onClick={closeHelpPanel}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors group"
-                  >
-                    <Star size={13} className="text-gray-300 flex-shrink-0 group-hover:text-indigo-400 transition-colors" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-700 truncate leading-tight">
+            <div className="rounded-xl border border-gray-100 divide-y divide-gray-100 overflow-hidden">
+              {GETTING_STARTED_ARTICLES.map((article, i) => {
+                const isOpen = openArticle === i;
+                return (
+                  <div key={article.title} className="bg-white">
+                    <button
+                      onClick={() => setOpenArticle(isOpen ? null : i)}
+                      className="w-full flex items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-gray-50 transition-colors cursor-pointer"
+                    >
+                      <span className="text-xs font-medium text-gray-700 leading-snug">
                         {article.title}
-                      </p>
-                      <p className="text-[11px] text-gray-400 mt-0.5">
-                        {article.category} · {article.readTime} read
+                      </span>
+                      <ChevronDown
+                        size={13}
+                        className={clsx(
+                          'text-gray-400 flex-shrink-0 transition-transform duration-300',
+                          isOpen && 'rotate-180',
+                        )}
+                      />
+                    </button>
+                    <div
+                      className={clsx(
+                        'overflow-hidden transition-all duration-300',
+                        isOpen ? 'max-h-40' : 'max-h-0',
+                      )}
+                    >
+                      <p className="px-3 pb-3 text-[11px] text-gray-500 leading-relaxed">
+                        {article.content}
                       </p>
                     </div>
-                    <ChevronRight
-                      size={13}
-                      className="text-gray-300 flex-shrink-0 group-hover:text-gray-500 transition-colors"
-                    />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                  </div>
+                );
+              })}
+            </div>
           </section>
 
           {/* Divider */}

@@ -8,11 +8,6 @@ import {
   ChevronDown,
   ChevronUp,
   Keyboard,
-  FolderPlus,
-  LayoutGrid,
-  Wand2,
-  CheckSquare,
-  Users,
   MessageSquare,
 } from 'lucide-react';
 import clsx from 'clsx';
@@ -23,52 +18,29 @@ import clsx from 'clsx';
 
 const GETTING_STARTED = [
   {
-    icon: FolderPlus,
-    title: 'Creating your first project',
-    description: 'Set up a project from scratch or use AI to generate a full plan in seconds.',
-    category: 'Getting Started',
-    readTime: '3 min',
-    color: 'text-indigo-600 bg-indigo-50',
+    title: 'How to create your first project',
+    content:
+      'Navigate to the Projects page and click New Project. Choose a blank project or use a template to get started quickly. Add tasks, set priorities, and invite teammates to collaborate — your project appears in the sidebar right away.',
   },
   {
-    icon: LayoutGrid,
-    title: 'Understanding the Kanban board',
-    description: 'Learn how to move tasks between columns and track your team\'s progress.',
-    category: 'Getting Started',
-    readTime: '5 min',
-    color: 'text-violet-600 bg-violet-50',
+    title: 'Using the AI project generator',
+    content:
+      'Click New Project and switch to the AI Generate tab. Describe your goal in plain English and Spike AI will scaffold a full project plan with tasks and priorities in seconds. Review the generated suggestions and accept, edit, or discard any of them.',
   },
   {
-    icon: Wand2,
-    title: 'Using AI to generate projects',
-    description: 'Describe your goal in plain English and let Spike AI build the plan.',
-    category: 'AI Features',
-    readTime: '4 min',
-    color: 'text-rose-600 bg-rose-50',
+    title: 'Managing tasks on the Kanban board',
+    content:
+      'Drag task cards between columns to update their status instantly. Click any card to open the detail panel where you can add subtasks, set due dates, and leave comments. Use the filter bar to focus on specific assignees or priority levels.',
   },
   {
-    icon: CheckSquare,
-    title: 'Setting up task priorities',
-    description: 'Understand Urgent, High, Medium, and Low priorities and when to use them.',
-    category: 'Tasks',
-    readTime: '3 min',
-    color: 'text-amber-600 bg-amber-50',
+    title: 'Inviting and managing team members',
+    content:
+      'Go to Settings and open the Team tab. Enter a teammate\'s email and select their role — Admin, Member, or Viewer. They\'ll receive an invite link and can join your workspace immediately. Remove or change roles at any time from the same page.',
   },
   {
-    icon: Users,
-    title: 'Inviting team members',
-    description: 'Add collaborators to your workspace and assign them to projects.',
-    category: 'Collaboration',
-    readTime: '2 min',
-    color: 'text-emerald-600 bg-emerald-50',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Comments and activity feed',
-    description: 'Communicate with your team directly on task cards.',
-    category: 'Collaboration',
-    readTime: '2 min',
-    color: 'text-sky-600 bg-sky-50',
+    title: 'Using the AI chat assistant',
+    content:
+      'Click the chat bubble in the bottom-right corner to open the AI assistant. Ask questions about your projects, request task generation, or get help with any Spike feature. The assistant has context about your workspace and provides tailored suggestions.',
   },
 ] as const;
 
@@ -162,6 +134,7 @@ const SHORTCUTS: ShortcutRow[] = [
 
 export default function HelpPage() {
   const [query, setQuery] = useState('');
+  const [openArticle, setOpenArticle] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const q = query.trim().toLowerCase();
@@ -172,8 +145,7 @@ export default function HelpPage() {
         ? GETTING_STARTED.filter(
             (a) =>
               a.title.toLowerCase().includes(q) ||
-              a.description.toLowerCase().includes(q) ||
-              a.category.toLowerCase().includes(q),
+              a.content.toLowerCase().includes(q),
           )
         : GETTING_STARTED,
     [q],
@@ -229,33 +201,33 @@ export default function HelpPage() {
       {filteredArticles.length > 0 && (
         <section id="getting-started">
           <SectionHeader icon={BookOpen} title="Getting Started" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            {filteredArticles.map((article) => {
-              const Icon = article.icon;
+          <div className="mt-4 rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+            {filteredArticles.map((article, i) => {
+              const isOpen = openArticle === i;
               return (
-                <div
-                  key={article.title}
-                  className="bg-white rounded-xl border border-gray-100 p-4 hover:shadow-md hover:border-gray-200 transition-all cursor-pointer group"
-                >
+                <div key={article.title} className="bg-white">
+                  <button
+                    onClick={() => setOpenArticle(isOpen ? null : i)}
+                    className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-gray-50 transition-colors cursor-pointer"
+                  >
+                    <span className="text-sm font-medium text-gray-900">{article.title}</span>
+                    <ChevronDown
+                      size={15}
+                      className={clsx(
+                        'text-gray-400 flex-shrink-0 transition-transform duration-300',
+                        isOpen && 'rotate-180',
+                      )}
+                    />
+                  </button>
                   <div
                     className={clsx(
-                      'w-9 h-9 rounded-lg flex items-center justify-center mb-3',
-                      article.color,
+                      'overflow-hidden transition-all duration-300',
+                      isOpen ? 'max-h-40' : 'max-h-0',
                     )}
                   >
-                    <Icon size={16} />
-                  </div>
-                  <p className="text-sm font-semibold text-gray-900 group-hover:text-indigo-700 transition-colors leading-snug">
-                    {article.title}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1 leading-snug">
-                    {article.description}
-                  </p>
-                  <div className="flex items-center gap-1.5 mt-3">
-                    <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded">
-                      {article.category}
-                    </span>
-                    <span className="text-[11px] text-gray-400">{article.readTime} read</span>
+                    <p className="px-5 pb-4 text-sm text-gray-600 leading-relaxed">
+                      {article.content}
+                    </p>
                   </div>
                 </div>
               );
