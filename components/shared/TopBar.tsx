@@ -54,7 +54,7 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
 
       {/* Right-side actions */}
       <div className="flex items-center gap-1 ml-auto">
-        <NotificationBell unreadCount={3} />
+        <NotificationBell />
 
         {/* User dropdown */}
         <div className="relative" ref={dropdownRef}>

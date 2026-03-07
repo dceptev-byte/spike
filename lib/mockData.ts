@@ -5,7 +5,7 @@
  * Week starts: 2026-03-02 (Monday).
  */
 
-import type { User, Project, Task } from '@/types';
+import type { User, Project, Task, Notification } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Users
@@ -391,6 +391,52 @@ export const MOCK_TASKS: Task[] = [
     order: 4,
     createdAt: '2026-01-20T10:00:00Z',
     updatedAt: '2026-02-10T10:00:00Z',
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Notifications
+// ---------------------------------------------------------------------------
+
+/**
+ * Mock notifications for Alex Morgan (user-1).
+ * 3 unread, 2 read — authored relative to 2026-03-07.
+ */
+export const MOCK_NOTIFICATIONS: Notification[] = [
+  {
+    id: 'notif-1',
+    type: 'task_assigned',
+    text: 'Jordan assigned you "Fix mobile navigation menu" in Website Redesign',
+    timestamp: '2026-03-07T06:15:00Z',
+    read: false,
+  },
+  {
+    id: 'notif-2',
+    type: 'comment',
+    text: 'Sam commented on "Design new homepage hero section"',
+    timestamp: '2026-03-07T04:00:00Z',
+    read: false,
+  },
+  {
+    id: 'notif-3',
+    type: 'due_soon',
+    text: '"Implement user authentication" is due today',
+    timestamp: '2026-03-07T00:01:00Z',
+    read: false,
+  },
+  {
+    id: 'notif-4',
+    type: 'task_assigned',
+    text: 'Riley assigned you "Create onboarding flow screens" in Mobile App MVP',
+    timestamp: '2026-03-06T16:45:00Z',
+    read: true,
+  },
+  {
+    id: 'notif-5',
+    type: 'comment',
+    text: 'Jordan left a comment on "Webhook error handling"',
+    timestamp: '2026-03-05T10:20:00Z',
+    read: true,
   },
 ];
 
