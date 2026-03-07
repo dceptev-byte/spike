@@ -58,6 +58,11 @@ interface UIStore {
    */
   activePanel: 'help' | 'chat' | null;
   setActivePanel: (panel: UIStore['activePanel']) => void;
+
+  // ── AI Chat widget ────────────────────────────────────────────────────────
+  isChatOpen: boolean;
+  setChatOpen: (open: boolean) => void;
+  toggleChat: () => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -102,4 +107,9 @@ export const useUIStore = create<UIStore>()((set) => ({
   // ── Active panel ──────────────────────────────────────────────────────────
   activePanel: null,
   setActivePanel: (panel) => set({ activePanel: panel }),
+
+  // ── AI Chat widget ────────────────────────────────────────────────────────
+  isChatOpen: false,
+  setChatOpen: (open) => set({ isChatOpen: open }),
+  toggleChat: () => set((s) => ({ isChatOpen: !s.isChatOpen })),
 }));

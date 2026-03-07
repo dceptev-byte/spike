@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { Sparkles, X, Send, Bot, RotateCcw } from 'lucide-react';
 import clsx from 'clsx';
+import { useUIStore } from '@/lib/store/uiStore';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -89,7 +90,9 @@ function TypingIndicator() {
 // ---------------------------------------------------------------------------
 
 export default function AIChatWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = useUIStore((s) => s.isChatOpen);
+  const setIsOpen = useUIStore((s) => s.setChatOpen);
+  const toggleChat = useUIStore((s) => s.toggleChat);
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -309,7 +312,7 @@ export default function AIChatWidget() {
 
       {/* ── Floating toggle button ── */}
       <button
-        onClick={() => setIsOpen((v) => !v)}
+        onClick={toggleChat}
         aria-label={isOpen ? 'Close Spike AI chat' : 'Open Spike AI chat'}
         className={clsx(
           'fixed bottom-6 right-6 z-50',

@@ -137,17 +137,14 @@ const GETTING_STARTED_ARTICLES = [
 // ---------------------------------------------------------------------------
 
 export default function HelpPanel() {
-  const { helpPanelOpen, closeHelpPanel, setActivePanel } =
+  const { helpPanelOpen, closeHelpPanel, setChatOpen } =
     useUIStore();
   const [openArticle, setOpenArticle] = useState<number | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<typeof PANEL_VIDEOS[number] | null>(null);
 
   function handleOpenAI() {
     closeHelpPanel();
-    // The AIChatWidget is always present — visually guide the user to it
-    // by briefly highlighting it (future: dispatch to uiStore.activePanel)
-    setActivePanel('chat');
-    setTimeout(() => setActivePanel(null), 2000);
+    setChatOpen(true);
   }
 
   return (
