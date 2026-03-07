@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AlertCircle, Calendar, CheckCircle2, FolderKanban } from 'lucide-react';
+import { MyTasksList } from './_components/MyTasksList';
 
 export const metadata: Metadata = { title: 'Dashboard' };
 import { OnboardingChecklist } from '@/components/onboarding';
@@ -11,8 +12,7 @@ import {
   MOCK_TASKS,
   MOCK_USERS,
 } from '@/lib/mockData';
-import { PRIORITY_LEVELS } from '@/constants';
-import type { Priority, Project, Task } from '@/types';
+import type { Project, Task } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -94,64 +94,6 @@ function StatCard({
       <p className={`text-2xl font-bold ${c.value}`}>{value}</p>
       <p className={`text-sm mt-0.5 ${c.label}`}>{label}</p>
     </Link>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Priority badge
-// ---------------------------------------------------------------------------
-
-const PRIORITY_BADGE: Record<string, string> = {
-  gray:   'bg-gray-100 text-gray-600',
-  blue:   'bg-blue-100 text-blue-700',
-  orange: 'bg-orange-100 text-orange-700',
-  red:    'bg-red-100 text-red-700',
-};
-
-function PriorityBadge({ priority }: { priority: Priority }) {
-  const { label, color } = PRIORITY_LEVELS[priority];
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${PRIORITY_BADGE[color]}`}>
-      {label}
-    </span>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Task row
-// ---------------------------------------------------------------------------
-
-function TaskRow({ task, today }: { task: Task; today: string }) {
-  const isOverdue = !!task.dueDate && task.dueDate < today;
-  const isDueToday = task.dueDate === today;
-
-  return (
-    <li className="flex items-center gap-3 px-6 py-3 hover:bg-gray-50 transition-colors">
-      {/* Checkbox placeholder */}
-      <div
-        className="w-4 h-4 rounded border-2 border-gray-300 flex-shrink-0"
-        aria-hidden="true"
-      />
-
-      <span className="flex-1 text-sm text-gray-800 truncate">{task.title}</span>
-
-      <PriorityBadge priority={task.priority} />
-
-      {task.dueDate && (
-        <span
-          className={`text-xs flex-shrink-0 ${
-            isOverdue
-              ? 'text-red-500 font-medium'
-              : isDueToday
-              ? 'text-amber-600 font-medium'
-              : 'text-gray-400'
-          }`}
-        >
-          {isOverdue && '⚠ '}
-          {formatShortDate(task.dueDate)}
-        </span>
-      )}
-    </li>
   );
 }
 
@@ -299,35 +241,11 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* My Tasks */}
         <section className="xl:col-span-2 bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">My Tasks</h2>
-            <span className="text-xs text-gray-400">{activeTasks.length} open</span>
-          </div>
-
-          {taskGroups.length === 0 ? (
-            <p className="px-6 py-12 text-sm text-gray-400 text-center">
-              No active tasks — you&apos;re all caught up!
-            </p>
-          ) : (
-            <div>
-              {taskGroups.map(({ project, tasks }) => (
-                <div key={project.id}>
-                  {/* Project group header */}
-                  <div className="px-6 py-2 bg-gray-50 border-b border-gray-100">
-                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      {project.name}
-                    </span>
-                  </div>
-
-                  <ul className="divide-y divide-gray-50">
-                    {tasks.map((task) => (
-                      <TaskRow key={task.id} task={task} today={today} />
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          )}
+          <MyTasksList
+            taskGroups={taskGroups}
+            totalCount={activeTasks.length}
+            today={today}
+          />
         </section>
 
         {/* Recent Projects */}

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { CheckSquare2, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { CheckSquare2, ArrowRight } from 'lucide-react';
 import { useTaskStore } from '@/lib/store/taskStore';
 import { CURRENT_USER, MOCK_PROJECTS } from '@/lib/mockData';
 import { PRIORITY_LEVELS } from '@/constants';
@@ -77,8 +77,8 @@ function EmptyState({ filter }: { filter: Filter }) {
 // ---------------------------------------------------------------------------
 
 export default function MyTasksPage() {
-  const tasks   = useTaskStore((s) => s.tasks);
-  const today   = todayStr();
+  const tasks = useTaskStore((s) => s.tasks);
+  const today = todayStr();
   const [filter, setFilter] = useState<Filter>('open');
 
   const myTasks = useMemo(
@@ -86,11 +86,32 @@ export default function MyTasksPage() {
     [tasks],
   );
 
+  // Initialize checked IDs with tasks already marked done in the store
+  const [checkedIds, setCheckedIds] = useState<Set<string>>(
+    () => new Set(
+      tasks
+        .filter((t) => t.assigneeId === CURRENT_USER.id && t.status === 'done')
+        .map((t) => t.id),
+    ),
+  );
+
+  function toggle(id: string) {
+    setCheckedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  const openCount = myTasks.filter((t) => !checkedIds.has(t.id)).length;
+  const doneCount = myTasks.filter((t) => checkedIds.has(t.id)).length;
+
   const filtered = useMemo(() => {
-    if (filter === 'open') return myTasks.filter((t) => t.status !== 'done');
-    if (filter === 'done') return myTasks.filter((t) => t.status === 'done');
+    if (filter === 'open') return myTasks.filter((t) => !checkedIds.has(t.id));
+    if (filter === 'done') return myTasks.filter((t) => checkedIds.has(t.id));
     return myTasks;
-  }, [myTasks, filter]);
+  }, [myTasks, filter, checkedIds]);
 
   // Group by project
   const groups = useMemo(() => {
@@ -110,9 +131,6 @@ export default function MyTasksPage() {
       }),
     }));
   }, [filtered, today]);
-
-  const openCount = myTasks.filter((t) => t.status !== 'done').length;
-  const doneCount = myTasks.filter((t) => t.status === 'done').length;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -186,27 +204,44 @@ export default function MyTasksPage() {
               {/* Task rows */}
               <ul className="divide-y divide-gray-50">
                 {groupTasks.map((task) => {
-                  const isOverdue  = !!task.dueDate && task.dueDate < today && task.status !== 'done';
-                  const isDueToday = task.dueDate === today && task.status !== 'done';
-                  const isDone     = task.status === 'done';
+                  const isChecked  = checkedIds.has(task.id);
+                  const isOverdue  = !!task.dueDate && task.dueDate < today && !isChecked;
+                  const isDueToday = task.dueDate === today && !isChecked;
                   const { label: priLabel, color: priColor } = PRIORITY_LEVELS[task.priority as Priority];
 
                   return (
                     <li
                       key={task.id}
-                      className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors"
+                      className={`flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-all duration-200${isChecked ? ' opacity-50' : ''}`}
                     >
-                      {/* Done indicator */}
-                      {isDone ? (
-                        <CheckCircle2 size={16} className="flex-shrink-0 text-emerald-500" />
-                      ) : (
-                        <div className="w-4 h-4 rounded border-2 border-gray-300 flex-shrink-0" aria-hidden />
-                      )}
+                      {/* Interactive checkbox */}
+                      <button
+                        type="button"
+                        onClick={() => toggle(task.id)}
+                        aria-label={isChecked ? 'Mark incomplete' : 'Mark complete'}
+                        className={`w-4 h-4 rounded border-2 flex-shrink-0 cursor-pointer transition-all duration-150 flex items-center justify-center${
+                          isChecked
+                            ? ' bg-violet-600 border-violet-600'
+                            : ' border-gray-300 hover:border-violet-400'
+                        }`}
+                      >
+                        {isChecked && (
+                          <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 10 10" fill="none">
+                            <path
+                              d="M2 5l2.5 2.5L8 3"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )}
+                      </button>
 
                       {/* Title */}
                       <span
-                        className={`flex-1 text-sm truncate ${
-                          isDone ? 'line-through text-gray-400' : 'text-gray-800'
+                        className={`flex-1 text-sm truncate transition-all duration-200${
+                          isChecked ? ' line-through text-gray-400' : ' text-gray-800'
                         }`}
                       >
                         {task.title}
@@ -214,7 +249,7 @@ export default function MyTasksPage() {
 
                       {/* Status chip */}
                       <span className="hidden sm:inline-flex text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full flex-shrink-0">
-                        {STATUS_LABELS[task.status]}
+                        {STATUS_LABELS[task.status as TaskStatus]}
                       </span>
 
                       {/* Priority badge */}
