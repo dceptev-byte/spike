@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ChevronDown,
   LogOut,
@@ -11,6 +13,7 @@ import {
 import NotificationBell from './NotificationBell';
 import UserAvatar from './UserAvatar';
 import SearchBar from './SearchBar';
+import { useToastStore } from '@/lib/store/toastStore';
 
 /** Placeholder — swap for real auth session data when auth is added. */
 const MOCK_USER = { name: 'Alex Morgan', email: 'alex@spike.app' };
@@ -23,6 +26,8 @@ interface TopBarProps {
 export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const addToast = useToastStore((s) => s.addToast);
 
   /** Close the dropdown whenever the user clicks outside it. */
   useEffect(() => {
@@ -37,6 +42,17 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
     document.addEventListener('mousedown', handlePointerDown);
     return () => document.removeEventListener('mousedown', handlePointerDown);
   }, []);
+
+  function closeDropdown() {
+    setDropdownOpen(false);
+  }
+
+  function handleSignOut() {
+    // TODO: wire up Supabase auth signOut() in Phase 2
+    closeDropdown();
+    addToast('You have been signed out', 'info');
+    setTimeout(() => router.push('/'), 1500);
+  }
 
   return (
     <header className="h-14 flex-shrink-0 flex items-center gap-3 px-4 bg-white border-b border-gray-200">
@@ -91,8 +107,18 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
 
               {/* Menu items */}
               <div className="py-1">
-                <DropdownItem icon={<User size={14} />} label="Profile" />
-                <DropdownItem icon={<Settings size={14} />} label="Settings" />
+                <DropdownItem
+                  icon={<User size={14} />}
+                  label="Profile"
+                  href="/profile"
+                  onClick={closeDropdown}
+                />
+                <DropdownItem
+                  icon={<Settings size={14} />}
+                  label="Settings"
+                  href="/settings"
+                  onClick={closeDropdown}
+                />
               </div>
 
               <div className="border-t border-gray-100 py-1">
@@ -100,6 +126,7 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
                   icon={<LogOut size={14} />}
                   label="Sign out"
                   danger
+                  onClick={handleSignOut}
                 />
               </div>
             </div>
@@ -110,29 +137,48 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
   );
 }
 
-/** A single row inside the user dropdown menu. */
+// ---------------------------------------------------------------------------
+// DropdownItem — renders as <Link> when href is provided, <button> otherwise
+// ---------------------------------------------------------------------------
+
 function DropdownItem({
   icon,
   label,
   danger = false,
+  href,
   onClick,
 }: {
   icon: React.ReactNode;
   label: string;
   danger?: boolean;
+  href?: string;
   onClick?: () => void;
 }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors ${
-        danger
-          ? 'text-red-600 hover:bg-red-50'
-          : 'text-gray-700 hover:bg-gray-50'
-      }`}
-    >
+  const cls = [
+    'w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors',
+    danger
+      ? 'text-red-600 hover:bg-red-50'
+      : 'text-gray-700 hover:bg-gray-50',
+  ].join(' ');
+
+  const inner = (
+    <>
       <span className={danger ? 'text-red-500' : 'text-gray-400'}>{icon}</span>
       {label}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} onClick={onClick} className={cls}>
+        {inner}
+      </Link>
+    );
+  }
+
+  return (
+    <button onClick={onClick} className={cls}>
+      {inner}
     </button>
   );
 }

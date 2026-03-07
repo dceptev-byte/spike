@@ -8,6 +8,8 @@ import {
   ChevronRight,
   FolderKanban,
   LayoutDashboard,
+  Settings,
+  User,
   Users,
   X,
   Zap,
@@ -25,6 +27,11 @@ const PRIMARY_NAV = [
   { label: 'Projects', href: '/projects', icon: FolderKanban },
   { label: 'My Tasks', href: '/tasks', icon: CheckSquare },
   { label: 'Team', href: '/team', icon: Users },
+] as const;
+
+const SECONDARY_NAV = [
+  { label: 'Profile',  href: '/profile',  icon: User     },
+  { label: 'Settings', href: '/settings', icon: Settings },
 ] as const;
 
 /** Placeholder — swap for real auth session data when auth is added. */
@@ -125,9 +132,20 @@ export default function Sidebar({
             ))}
           </ul>
 
-          {/* Divider + Help button */}
+          {/* Divider + secondary nav (Profile, Settings) + Help */}
           <div className="mt-3 pt-3 border-t border-white/10">
             <ul className="space-y-0.5">
+              {SECONDARY_NAV.map(({ label, href, icon: Icon }) => (
+                <NavItem
+                  key={href}
+                  label={label}
+                  href={href}
+                  icon={<Icon size={17} className="flex-shrink-0" />}
+                  active={isActive(href)}
+                  collapsed={collapsed}
+                  onClick={onMobileClose}
+                />
+              ))}
               <HelpButton collapsed={collapsed} />
             </ul>
           </div>
