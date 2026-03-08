@@ -176,7 +176,7 @@ export default function SearchBar() {
           aria-haspopup="listbox"
           aria-autocomplete="list"
           aria-controls="search-results-listbox"
-          className="w-full h-9 pl-9 pr-8 rounded-lg bg-apple-gray-1 border border-transparent text-sm text-apple-black placeholder:text-apple-gray-4 focus:outline-none focus:bg-white focus:ring-1 focus:ring-apple-blue transition-colors"
+          className="w-full h-9 pl-9 pr-8 rounded-lg bg-gray-100 border border-transparent text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:bg-white focus:border-indigo-300 transition-colors"
         />
         {query && (
           <button
@@ -195,7 +195,7 @@ export default function SearchBar() {
         <div
           id="search-results-listbox"
           role="listbox"
-          className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-apple-gray-2 rounded-xl shadow-lg z-50 max-h-80 overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg z-50 max-h-80 overflow-y-auto"
         >
           {flatResults.length === 0 ? (
             /* ── Empty state ── */
@@ -274,12 +274,12 @@ function ResultRow({
       onMouseEnter={onMouseEnter}
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-3 py-2 text-left transition-colors ${
-        active ? 'bg-apple-gray-1' : 'hover:bg-apple-gray-1'
+        active ? 'bg-indigo-50' : 'hover:bg-gray-50'
       }`}
     >
       <Icon
         size={15}
-        className={`flex-shrink-0 ${active ? 'text-apple-blue' : 'text-apple-gray-4'}`}
+        className={`flex-shrink-0 ${active ? 'text-indigo-500' : 'text-gray-400'}`}
       />
       <span className="flex-1 min-w-0">
         <span className="block text-sm font-medium text-gray-900 truncate">

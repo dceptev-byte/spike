@@ -37,8 +37,8 @@ const TYPE_CONFIG: Record<
   { icon: React.ReactNode; bg: string }
 > = {
   task_assigned: {
-    icon: <ClipboardList size={14} className="text-apple-blue" />,
-    bg: 'bg-blue-50',
+    icon: <ClipboardList size={14} className="text-indigo-500" />,
+    bg: 'bg-indigo-50',
   },
   comment: {
     icon: <MessageCircle size={14} className="text-emerald-500" />,
@@ -102,7 +102,7 @@ export default function NotificationBell() {
       {/* Bell button */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="relative p-2 rounded-full text-apple-gray-4 hover:text-apple-black hover:bg-apple-gray-1 transition-colors"
+        className="relative p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
         aria-label={
           unreadCount > 0
             ? `Notifications — ${unreadCount} unread`
@@ -125,16 +125,16 @@ export default function NotificationBell() {
 
       {/* Dropdown panel */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-apple-gray-2 rounded-xl shadow-lg z-50 overflow-hidden">
+        <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-apple-gray-2">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <h3 className="text-sm font-semibold text-gray-900">
               Notifications
             </h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllRead}
-                className="flex items-center gap-1.5 text-xs font-medium text-apple-blue hover:text-apple-blue-hover transition-colors"
+                className="flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
               >
                 <CheckCheck size={13} />
                 Mark all as read
@@ -167,7 +167,7 @@ export default function NotificationBell() {
                         markRead(n.id);
                         setIsOpen(false);
                       }}
-                      className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-apple-gray-1 transition-colors"
+                      className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
                     >
                       {/* Unread dot — always reserve the space so text stays aligned */}
                       <div className="flex-shrink-0 mt-2">
@@ -208,11 +208,11 @@ export default function NotificationBell() {
           )}
 
           {/* Footer */}
-          <div className="border-t border-apple-gray-2 px-4 py-2.5">
+          <div className="border-t border-gray-100 px-4 py-2.5">
             <Link
               href="/tasks"
               onClick={() => setIsOpen(false)}
-              className="block w-full text-xs text-center font-medium text-apple-blue hover:text-apple-blue-hover transition-colors py-0.5"
+              className="block w-full text-xs text-center font-medium text-indigo-600 hover:text-indigo-700 transition-colors py-0.5"
             >
               View all notifications
             </Link>

@@ -78,7 +78,7 @@ export default function Sidebar({
       <aside
         className={[
           // Base
-          'flex flex-col bg-white border-r border-apple-gray-2 transition-[width] duration-300 ease-in-out z-50 flex-shrink-0',
+          'flex flex-col bg-[#0f172a] transition-[width] duration-300 ease-in-out z-50 flex-shrink-0',
           // Desktop width — collapsed or expanded
           collapsed ? 'md:w-16' : 'md:w-60',
           // Mobile — fixed overlay when open, otherwise hidden
@@ -93,14 +93,14 @@ export default function Sidebar({
             collapsed ? 'justify-center' : 'gap-2.5'
           }`}
         >
-          {/* Logo mark — blue lightning bolt */}
-          <div className="w-7 h-7 rounded-lg bg-apple-blue flex items-center justify-center flex-shrink-0">
+          {/* Logo mark */}
+          <div className="w-7 h-7 rounded-lg bg-indigo-500 flex items-center justify-center flex-shrink-0">
             <Zap size={14} className="text-white" strokeWidth={2.5} />
           </div>
 
           {/* Wordmark — hidden when collapsed */}
           {!collapsed && (
-            <span className="text-apple-black font-semibold text-[15px] tracking-tight font-heading">
+            <span className="text-white font-semibold text-[15px] tracking-tight">
               Spike
             </span>
           )}
@@ -108,7 +108,7 @@ export default function Sidebar({
           {/* Mobile close button */}
           <button
             onClick={onMobileClose}
-            className="ml-auto md:hidden p-1.5 rounded-lg text-apple-gray-4 hover:text-apple-black hover:bg-apple-gray-1 transition-colors"
+            className="ml-auto md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
             aria-label="Close sidebar"
           >
             <X size={16} />
@@ -133,7 +133,7 @@ export default function Sidebar({
           </ul>
 
           {/* Divider + secondary nav (Profile, Settings) + Help */}
-          <div className="mt-3 pt-3 border-t border-apple-gray-2">
+          <div className="mt-3 pt-3 border-t border-white/10">
             <ul className="space-y-0.5">
               {SECONDARY_NAV.map(({ label, href, icon: Icon }) => (
                 <NavItem
@@ -152,14 +152,14 @@ export default function Sidebar({
         </nav>
 
         {/* ── User footer + collapse toggle ── */}
-        <div className="border-t border-apple-gray-2 p-2 flex-shrink-0">
+        <div className="border-t border-white/10 p-2 flex-shrink-0">
           {collapsed ? (
             /* Collapsed: stack avatar + expand button */
             <div className="flex flex-col items-center gap-2 py-1">
               <UserAvatar name={MOCK_USER.name} size="sm" />
               <button
                 onClick={() => setCollapsed(false)}
-                className="hidden md:flex p-1.5 rounded-lg text-apple-gray-4 hover:text-apple-black hover:bg-apple-gray-1 transition-colors"
+                className="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 aria-label="Expand sidebar"
               >
                 <ChevronRight size={15} />
@@ -170,16 +170,16 @@ export default function Sidebar({
             <div className="flex items-center gap-2.5 px-1 py-1">
               <UserAvatar name={MOCK_USER.name} size="sm" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-apple-black truncate leading-tight">
+                <p className="text-sm font-medium text-white truncate leading-tight">
                   {MOCK_USER.name}
                 </p>
-                <p className="text-xs text-apple-gray-4 truncate leading-tight">
+                <p className="text-xs text-slate-400 truncate leading-tight">
                   {MOCK_USER.plan}
                 </p>
               </div>
               <button
                 onClick={() => setCollapsed(true)}
-                className="hidden md:flex p-1.5 rounded-lg text-apple-gray-4 hover:text-apple-black hover:bg-apple-gray-1 transition-colors flex-shrink-0"
+                className="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0"
                 aria-label="Collapse sidebar"
               >
                 <ChevronLeft size={15} />
@@ -216,8 +216,8 @@ function NavItem({ label, href, icon, active, collapsed, onClick }: NavItemProps
           'flex items-center gap-3 rounded-lg py-2 text-sm font-medium transition-colors',
           collapsed ? 'justify-center px-2' : 'px-3',
           active
-            ? 'bg-apple-gray-1 text-apple-blue'
-            : 'text-apple-gray-5 hover:bg-apple-gray-1 hover:text-apple-black',
+            ? 'bg-white/10 text-white'
+            : 'text-slate-400 hover:bg-white/5 hover:text-slate-200',
         ].join(' ')}
       >
         {icon}
