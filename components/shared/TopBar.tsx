@@ -55,11 +55,11 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
   }
 
   return (
-    <header className="h-14 flex-shrink-0 flex items-center gap-3 px-4 bg-white border-b border-gray-200">
+    <header className="h-14 flex-shrink-0 flex items-center gap-3 px-4 bg-white border-b border-apple-gray-2">
       {/* Mobile hamburger */}
       <button
         onClick={onMobileMenuToggle}
-        className="md:hidden p-2 -ml-1 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+        className="md:hidden p-2 -ml-1 rounded-lg text-apple-gray-4 hover:text-apple-black hover:bg-apple-gray-1 transition-colors"
         aria-label="Open navigation"
       >
         <Menu size={20} />
@@ -76,31 +76,31 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen((prev) => !prev)}
-            className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-apple-gray-1 transition-colors"
             aria-expanded={dropdownOpen}
             aria-haspopup="true"
             aria-label="User menu"
           >
             <UserAvatar name={MOCK_USER.name} size="sm" />
-            <span className="hidden sm:block text-sm font-medium text-gray-700 max-w-[120px] truncate">
+            <span className="hidden sm:block text-sm font-medium text-apple-black max-w-[120px] truncate">
               {MOCK_USER.name}
             </span>
             <ChevronDown
               size={13}
-              className={`text-gray-400 transition-transform duration-150 ${
+              className={`text-apple-gray-4 transition-transform duration-150 ${
                 dropdownOpen ? 'rotate-180' : ''
               }`}
             />
           </button>
 
           {dropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-50">
+            <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-apple-gray-2 rounded-xl shadow-lg py-1 z-50">
               {/* User info header */}
-              <div className="px-3 py-2.5 border-b border-gray-100">
-                <p className="text-sm font-semibold text-gray-900 truncate">
+              <div className="px-3 py-2.5 border-b border-apple-gray-2">
+                <p className="text-sm font-semibold text-apple-black truncate">
                   {MOCK_USER.name}
                 </p>
-                <p className="text-xs text-gray-500 truncate mt-0.5">
+                <p className="text-xs text-apple-gray-4 truncate mt-0.5">
                   {MOCK_USER.email}
                 </p>
               </div>
@@ -121,7 +121,7 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
                 />
               </div>
 
-              <div className="border-t border-gray-100 py-1">
+              <div className="border-t border-apple-gray-2 py-1">
                 <DropdownItem
                   icon={<LogOut size={14} />}
                   label="Sign out"
@@ -158,12 +158,12 @@ function DropdownItem({
     'w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors',
     danger
       ? 'text-red-600 hover:bg-red-50'
-      : 'text-gray-700 hover:bg-gray-50',
+      : 'text-apple-gray-5 hover:bg-apple-gray-1 hover:text-apple-black',
   ].join(' ');
 
   const inner = (
     <>
-      <span className={danger ? 'text-red-500' : 'text-gray-400'}>{icon}</span>
+      <span className={danger ? 'text-red-500' : 'text-apple-gray-4'}>{icon}</span>
       {label}
     </>
   );
